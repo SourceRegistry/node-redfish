@@ -1,5 +1,12 @@
 # node-redfish
 
+[![CI](https://github.com/SourceRegistry/node-redfish/actions/workflows/ci.yml/badge.svg)](https://github.com/SourceRegistry/node-redfish/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/node-redfish.svg)](https://www.npmjs.com/package/node-redfish)
+[![npm downloads](https://img.shields.io/npm/dm/node-redfish.svg)](https://www.npmjs.com/package/node-redfish)
+[![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://sourceregistry.github.io/node-redfish/)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 A TypeScript client for querying and managing [Redfish](https://www.dmtf.org/standards/redfish)-compliant BMCs (Dell iDRAC, HPE iLO, Lenovo XCC, Supermicro, and other DMTF Redfish implementations).
 
 Ships as dual ESM/CJS with bundled type declarations, built with [Vite](https://vitejs.dev) in library mode.

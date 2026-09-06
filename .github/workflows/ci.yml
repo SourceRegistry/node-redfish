@@ -10,12 +10,16 @@ permissions:
   contents: read
 
 jobs:
+  # The published package only needs Node >=18.17 (see "engines" in
+  # package.json) — fetch/undici/AbortController all work there. The
+  # matrix below is narrower than that because the *dev toolchain* (vite 8
+  # / vitest 5) requires Node >=20.19 for vite and >=22.12 for vitest.
   test:
     name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x, 24.x]
     steps:
       - uses: actions/checkout@v4
 
@@ -68,6 +72,52 @@ jobs:
         run: npm run test:integration
         env:
           REDFISH_TEST_BASE_URL: http://localhost:5000
+
+  # Builds API docs with TypeDoc and publishes them to GitHub Pages.
+  #
+  # One-time setup: in the repo's Settings > Pages, set "Source" to
+  # "GitHub Actions" (instead of a branch) so this job's deployment target
+  # exists.
+  docs:
+    name: Docs
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build docs
+        run: npm run docs
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload docs artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   # Versioning, npm publish, GitHub release, and CHANGELOG.md are all driven
   # by semantic-release from Conventional Commits on `main` (see
