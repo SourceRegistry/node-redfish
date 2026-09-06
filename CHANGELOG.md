@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/SourceRegistry/node-redfish/compare/v1.0.1...v1.0.2) (2026-09-06)
+
+
+### Bug Fixes
+
+* updated undici to latest ([bc0d255](https://github.com/SourceRegistry/node-redfish/commit/bc0d2558759c0d6a7f40cba60f3610407f1dd17b))
+
 ## [1.0.1](https://github.com/SourceRegistry/node-redfish/compare/v1.0.0...v1.0.1) (2026-09-06)
 
 
