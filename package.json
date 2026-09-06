@@ -11,7 +11,7 @@
     "out-of-band",
     "swordfish"
   ],
-  "homepage": "https://github.com/SourceRegistry/node-redfish#readme",
+  "homepage": "https://sourceregistry.github.io/node-redfish/",
   "bugs": {
     "url": "https://github.com/SourceRegistry/node-redfish/issues"
   },
