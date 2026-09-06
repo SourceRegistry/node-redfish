@@ -9,7 +9,7 @@
 
 A TypeScript client for querying and managing [Redfish](https://www.dmtf.org/standards/redfish)-compliant BMCs (Dell iDRAC, HPE iLO, Lenovo XCC, Supermicro, and other DMTF Redfish implementations).
 
-Ships as dual ESM/CJS with bundled type declarations, built with [Vite](https://vitejs.dev) in library mode.
+Ships as dual ESM/CJS with bundled type declarations. Full API reference: **https://sourceregistry.github.io/node-redfish/**
 
 ## Install
 
@@ -103,35 +103,9 @@ client.delete(path);
 - `RedfishTimeoutError` — request exceeded `timeoutMs` (default 15s).
 - `RedfishActionNotSupportedError` — requested action isn't present on the resource.
 
-## Development
+## Contributing
 
-```sh
-npm ci
-npm run lint
-npm run typecheck
-npm test
-npm run build
-```
-
-### Integration tests
-
-`npm test` only runs against a mocked `fetch`. `src/client.integration.test.ts` additionally exercises the client against a real Redfish HTTP server — [DMTF's own reference emulator](https://github.com/DMTF/Redfish-Interface-Emulator) — and is skipped automatically when nothing answers at `REDFISH_TEST_BASE_URL` (default `http://localhost:5000`):
-
-```sh
-docker run --rm -p 5000:5000 dmtf/redfish-interface-emulator:latest
-npm run test:integration
-```
-
-It covers the read surface (`getServiceRoot`, `getSystems`, `getSystem`, `getChassisCollection`) and action discovery/invocation (`resetSystem`). The emulator's bundled `SessionService` fixture predates the current spec and doesn't support session creation, so `{ type: 'session' }` auth isn't covered by it.
-
-Other DMTF tooling worth knowing about if you're extending this package:
-- [Redfish-Mockup-Server](https://github.com/DMTF/Redfish-Mockup-Server) — serves static JSON mockups (GET-only), useful for read-path fixtures against specific vendor mockup data (DSP2043).
-- [Redfish-Service-Validator](https://github.com/DMTF/Redfish-Service-Validator) / [Redfish-Protocol-Validator](https://github.com/DMTF/Redfish-Protocol-Validator) — conformance checkers for a *service*, not a client, but useful for validating any target BMC before filing a bug against this client.
-- [python-redfish-library](https://github.com/DMTF/python-redfish-library) — DMTF's official Python client; this package's `auth`/`connect`/`disconnect` shape and the `insecure` TLS option mirror its `redfish_client`/`login`/`cafile` design.
-
-## Publishing
-
-CI (`.github/workflows/ci.yml`) publishes to npm on `v*` tags using the `NPM_TOKEN` repository secret. Once this package is enrolled in [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers), the publish job should switch to OIDC (`id-token: write` + `npm publish --provenance`, no token secret) — see the `TODO` in the workflow file.
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for local setup, testing (including integration tests against a real Redfish server), and the release process.
 
 ## License
 
