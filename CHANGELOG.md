@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/SourceRegistry/node-redfish/compare/v1.0.0...v1.0.1) (2026-09-06)
+
+
+### Bug Fixes
+
+* Split README into user-facing docs and DEVELOPMENT.md ([afbb176](https://github.com/SourceRegistry/node-redfish/commit/afbb17607dd66ff77faa213b84e4ee986f68d525))
+
 # 1.0.0 (2026-09-06)
 
 

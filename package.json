@@ -1,6 +1,6 @@
 {
   "name": "node-redfish",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Client for querying and managing Redfish-compliant BMCs (DMTF Redfish)",
   "keywords": [
     "redfish",
