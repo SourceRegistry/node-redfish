@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run coverage
+
+      - name: Build
+        run: npm run build
+
+  # Exercises the client against a real Redfish HTTP server — DMTF's own
+  # reference emulator — rather than a mocked fetch. Covers the read
+  # surface and the action-discovery POST path (see
+  # src/client.integration.test.ts for why session-auth isn't covered).
+  integration:
+    name: Integration
+    runs-on: ubuntu-latest
+    services:
+      redfish-emulator:
+        image: dmtf/redfish-interface-emulator:latest
+        ports:
+          - 5000:5000
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Integration test
+        run: npm run test:integration
+        env:
+          REDFISH_TEST_BASE_URL: http://localhost:5000
+
+  # Versioning, npm publish, GitHub release, and CHANGELOG.md are all driven
+  # by semantic-release from Conventional Commits on `main` (see
+  # release.config.js). Uses an npm automation token stored as the
+  # NPM_TOKEN repository secret for the @semantic-release/npm plugin.
+  #
+  # TODO: once this package is enrolled in npm Trusted Publishing
+  # (https://docs.npmjs.com/trusted-publishers), add `id-token: write` to
+  # this job's permissions and drop the NPM_TOKEN secret + env below —
+  # @semantic-release/npm (>=12.0.2) uses the workflow's OIDC token
+  # automatically when no auth token is configured and the package is
+  # enrolled as a trusted publisher.
+  release:
+    name: Release
+    needs: [test, integration]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

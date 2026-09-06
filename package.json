@@ -1,0 +1,74 @@
+{
+  "name": "node-redfish",
+  "version": "0.0.0-development",
+  "description": "Client for querying and managing Redfish-compliant BMCs (DMTF Redfish)",
+  "keywords": [
+    "redfish",
+    "dmtf",
+    "bmc",
+    "ipmi",
+    "server-management",
+    "out-of-band",
+    "swordfish"
+  ],
+  "homepage": "https://github.com/SourceRegistry/node-redfish#readme",
+  "bugs": {
+    "url": "https://github.com/SourceRegistry/node-redfish/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SourceRegistry/node-redfish.git"
+  },
+  "license": "Apache-2.0",
+  "author": "SourceRegistry",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run --no-ci"
+  },
+  "dependencies": {
+    "undici": "^6.21.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^26.4.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "@vitest/coverage-v8": "^5.0.0",
+    "eslint": "^10.10.0",
+    "semantic-release": "^25.0.9",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.1.0",
+    "vitest": "^5.0.0"
+  }
+}
