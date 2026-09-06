@@ -56,7 +56,7 @@
     "release:dry": "semantic-release --dry-run --no-ci"
   },
   "dependencies": {
-    "undici": "^6.21.0"
+    "undici": "^8.10.2"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
